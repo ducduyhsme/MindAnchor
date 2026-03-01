@@ -5,19 +5,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '../../constants/Colors';
 
 function PillButton({
-  accessibilityState,
   onPress,
+  children,
+  selected,
   label,
-  icon,
   isLeft,
 }: {
-  accessibilityState?: { selected?: boolean };
   onPress?: () => void;
+  children?: React.ReactNode;
+  selected?: boolean;
   label: string;
-  icon: string;
   isLeft: boolean;
 }) {
-  const selected = accessibilityState?.selected;
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -28,7 +27,7 @@ function PillButton({
       ]}
       activeOpacity={0.85}
     >
-      <Text style={styles.pillIcon}>{icon}</Text>
+      {children}
       {selected && <Text style={styles.pillLabel}>{label}</Text>}
     </TouchableOpacity>
   );
@@ -70,14 +69,16 @@ export default function TabLayout() {
         name="companion"
         options={{
           title: 'AI Companion',
+          tabBarIcon: () => <Text style={styles.pillIcon}>🎙️</Text>,
           tabBarButton: (props) => (
             <PillButton
-              accessibilityState={props.accessibilityState}
               onPress={props.onPress as () => void}
+              selected={(props as { 'aria-selected'?: boolean })['aria-selected']}
               label="Companion"
-              icon="🎙️"
               isLeft={true}
-            />
+            >
+              {props.children}
+            </PillButton>
           ),
         }}
       />
@@ -85,14 +86,16 @@ export default function TabLayout() {
         name="forum"
         options={{
           title: 'Community',
+          tabBarIcon: () => <Text style={styles.pillIcon}>💬</Text>,
           tabBarButton: (props) => (
             <PillButton
-              accessibilityState={props.accessibilityState}
               onPress={props.onPress as () => void}
+              selected={(props as { 'aria-selected'?: boolean })['aria-selected']}
               label="Community"
-              icon="💬"
               isLeft={false}
-            />
+            >
+              {props.children}
+            </PillButton>
           ),
         }}
       />
