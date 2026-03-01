@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '../../constants/Colors';
 import MoodTracker from '../../components/ActivityLog/MoodTracker';
 import DailyPrompts from '../../components/ActivityLog/DailyPrompts';
@@ -12,6 +13,7 @@ export default function DailyLogScreen() {
   const [selectedMood, setSelectedMood] = useState<MoodLevel | null>(null);
   const [response, setResponse] = useState('');
   const todayDate = getTodayDate();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     loadEntries();
@@ -49,7 +51,7 @@ export default function DailyLogScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={[styles.safe, { paddingTop: insets.top }]}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -64,7 +66,7 @@ export default function DailyLogScreen() {
         <CalendarView entries={entries} />
         <View style={styles.bottomPad} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
