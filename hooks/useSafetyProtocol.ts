@@ -21,11 +21,11 @@ export function useSafetyProtocol() {
       return true;
     }
     return false;
-  }, []);
+  }, [setSafetyState]);
 
   const dismiss = useCallback(() => {
     setSafetyState({ triggered: false, message: '' });
-  }, []);
+  }, [setSafetyState]);
 
   return { safetyState, checkText, dismiss, resources: CRISIS_RESOURCES };
 }

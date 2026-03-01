@@ -74,9 +74,9 @@ export default function CompanionScreen() {
     [checkText]
   );
 
-  const handleVoicePressIn = () => startListening();
-  const handleVoicePressOut = () => stopListening((transcript) => { if (transcript) sendMessage(transcript); });
-  const handleStopSpeech = () => { Speech.stop(); setIsSpeakingAI(false); };
+  const handleVoicePressIn = useCallback(() => startListening(), [startListening]);
+  const handleVoicePressOut = useCallback(() => stopListening((transcript) => { if (transcript) sendMessage(transcript); }), [stopListening, sendMessage]);
+  const handleStopSpeech = useCallback(() => { Speech.stop(); setIsSpeakingAI(false); }, []);
 
   return (
     <SafeAreaView style={styles.safe}>

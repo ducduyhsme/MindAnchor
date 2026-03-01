@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Colors';
 import AudioPlayer from '../../components/Library/AudioPlayer';
@@ -18,6 +18,8 @@ export default function LibraryScreen() {
   const [activeTab, setActiveTab] = useState('Audio');
   const [activeAudioCategory, setActiveAudioCategory] = useState<string>('meditation');
   const filteredTracks = AUDIO_TRACKS.filter((t) => t.category === activeAudioCategory);
+  const handleSetTab = useCallback((tab: string) => setActiveTab(tab), []);
+  const handleSetAudioCat = useCallback((key: string) => setActiveAudioCategory(key), []);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -27,7 +29,7 @@ export default function LibraryScreen() {
       </View>
       <View style={styles.tabRow}>
         {MAIN_TABS.map((tab) => (
-          <TouchableOpacity key={tab} style={[styles.tabBtn, activeTab === tab && styles.tabBtnActive]} onPress={() => setActiveTab(tab)} activeOpacity={0.8}>
+          <TouchableOpacity key={tab} style={[styles.tabBtn, activeTab === tab && styles.tabBtnActive]} onPress={() => handleSetTab(tab)} activeOpacity={0.8}>
             <Text style={[styles.tabBtnText, activeTab === tab && styles.tabBtnTextActive]}>{tab}</Text>
           </TouchableOpacity>
         ))}
@@ -37,7 +39,7 @@ export default function LibraryScreen() {
           <>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.audioCatScroll}>
               {AUDIO_CATEGORIES.map((cat) => (
-                <TouchableOpacity key={cat.key} style={[styles.audioCatChip, activeAudioCategory === cat.key && styles.audioCatChipActive]} onPress={() => setActiveAudioCategory(cat.key)} activeOpacity={0.7}>
+                <TouchableOpacity key={cat.key} style={[styles.audioCatChip, activeAudioCategory === cat.key && styles.audioCatChipActive]} onPress={() => handleSetAudioCat(cat.key)} activeOpacity={0.7}>
                   <Text style={[styles.audioCatText, activeAudioCategory === cat.key && styles.audioCatTextActive]}>{cat.label}</Text>
                 </TouchableOpacity>
               ))}
