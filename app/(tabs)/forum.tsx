@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, SafeAreaView,
+  View, Text, StyleSheet, ScrollView,
   TouchableOpacity, Modal, TextInput, Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '../../constants/Colors';
 import ThreadList, { Thread } from '../../components/Forum/ThreadList';
 import AudioRoom from '../../components/Forum/AudioRoom';
@@ -63,7 +64,7 @@ export default function ForumScreen() {
             <Text style={styles.newPostButtonText}>+ New Post</Text>
           </TouchableOpacity>
         </View>
-        <ThreadList threads={filteredThreads} onPressThread={() => {}} />
+        <ThreadList threads={filteredThreads} onPressThread={() => { }} />
         <View style={{ height: 24 }} />
       </ScrollView>
       <Modal visible={showNewPost} animationType="slide" presentationStyle="pageSheet">

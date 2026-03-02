@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   pillLabel: {
     fontSize: 11,
-    color: '#FFFFFF',
+    color: Colors.text,
     fontWeight: '700',
   },
 });
