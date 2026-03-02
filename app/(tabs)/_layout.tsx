@@ -69,7 +69,6 @@ export default function TabLayout() {
         name="companion"
         options={{
           title: 'AI Companion',
-          tabBarIcon: () => <Text style={styles.pillIcon}>🎙️</Text>,
           tabBarButton: (props) => (
             <PillButton
               onPress={props.onPress as () => void}
@@ -77,7 +76,7 @@ export default function TabLayout() {
               label="Companion"
               isLeft={true}
             >
-              {props.children}
+              <Text style={styles.pillIcon}>🎙️</Text>
             </PillButton>
           ),
         }}
@@ -86,7 +85,6 @@ export default function TabLayout() {
         name="forum"
         options={{
           title: 'Community',
-          tabBarIcon: () => <Text style={styles.pillIcon}>💬</Text>,
           tabBarButton: (props) => (
             <PillButton
               onPress={props.onPress as () => void}
@@ -94,7 +92,7 @@ export default function TabLayout() {
               label="Community"
               isLeft={false}
             >
-              {props.children}
+              <Text style={styles.pillIcon}>💬</Text>
             </PillButton>
           ),
         }}
