@@ -11,7 +11,7 @@ import ChatBubble, { ChatMessage } from '../../components/Companion/ChatBubble';
 import SafetyAlert from '../../components/Companion/SafetyAlert';
 import { useVoiceInput } from '../../hooks/useVoiceInput';
 import { useSafetyProtocol } from '../../hooks/useSafetyProtocol';
-import { sendMessageToGemini, GeminiMessage } from '../../services/geminiService';
+import { sendMessageToAI, ChatMessageInterface } from '../../services/aiService';
 
 const INITIAL_MESSAGE = "Hi, I'm Anchor 🌿 — your mental wellness companion. I'm here to listen without judgment. How are you feeling today?";
 
@@ -28,7 +28,7 @@ export default function CompanionScreen() {
   const [isSpeakingAI, setIsSpeakingAI] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
-  const chatHistoryRef = useRef<GeminiMessage[]>([]);
+  const chatHistoryRef = useRef<ChatMessageInterface[]>([]);
 
   const { isListening, startListening, stopListening } = useVoiceInput();
   const { safetyState, checkText, dismiss } = useSafetyProtocol();
@@ -51,11 +51,11 @@ export default function CompanionScreen() {
 
       setIsLoading(true);
       try {
-        const aiText = await sendMessageToGemini(chatHistoryRef.current, trimmed);
+        const aiText = await sendMessageToAI(chatHistoryRef.current, trimmed);
         chatHistoryRef.current = [
           ...chatHistoryRef.current,
-          { role: 'user', parts: [{ text: trimmed }] },
-          { role: 'model', parts: [{ text: aiText }] },
+          { role: 'user', content: trimmed },
+          { role: 'assistant', content: aiText },
         ];
         const aiMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
@@ -73,7 +73,7 @@ export default function CompanionScreen() {
         });
         setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
       } catch (error) {
-        console.error('[Gemini] Failed to get AI response:', error);
+        console.error('[AI] Failed to get AI response:', error);
         const errorMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
@@ -88,8 +88,15 @@ export default function CompanionScreen() {
     [checkText, isLoading]
   );
 
-  const handleVoicePressIn = useCallback(() => startListening(), [startListening]);
-  const handleVoicePressOut = useCallback(() => stopListening((transcript) => { if (transcript) sendMessage(transcript); }), [stopListening, sendMessage]);
+  const handleVoicePressIn = useCallback(() => {
+    if (isLoading) return;
+    startListening();
+  }, [startListening, isLoading]);
+
+  const handleVoicePressOut = useCallback(() => {
+    if (isLoading) return;
+    stopListening((transcript) => { if (transcript) sendMessage(transcript); });
+  }, [stopListening, sendMessage, isLoading]);
   const handleStopSpeech = useCallback(() => { Speech.stop(); setIsSpeakingAI(false); }, []);
 
   return (
